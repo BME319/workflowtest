@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="styles/demo.css" />
+	</head>
+
+	<body>
+		<div id="app">
+			<fieldset>
+				<legend>
+					<label v-if="ModifyFlag">CreatePerson</label> // 提示目前是创建新数据还是修改原数据
+					<label v-else>ModifyPerson</label>
+				</legend>
+				<div class="form-group">
+					<label>Name:</label>
+					<input type="text" v-model="newPerson.name"/>
+				</div>
+				<div class="form-group">
+					<label>Age:</label>
+					<input type="text" v-model="newPerson.age"/>
+				</div>
+				<div class="form-group">
+					<label>Sex:</label>
+					<select v-model="newPerson.sex">
+					<option value="Male">Male</option>
+					<option value="Female">Female</option>
+				</select>
+				</div>
+				<div class="form-group">
+					<label></label>
+					<button @click="createPerson">Create</button>
+				</div>
+		</fieldset>
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Sex</th>
+					<th>Delete</th>
+					<th>Modify</th>
+					<th>Save</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(person, index) in people">
+					<td>{{ person.name }}</td>
+					<td>{{ person.age }}</td>
+					<td>{{ person.sex }}</td>
+					<td :class="'text-center'"><button @click="deletePerson(index)">Delete</button></td>
+					<td :class="'text-center'"><button @click="modifyPerson">Modify</button></td>
+					<td :class="'text-center'"><button @click="savePerson(index)">Save</button></td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</body>
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				ModifyFlag: true,
+				newPerson: {
+					name: '',
+					age: 0,
+					sex: 'Male'
+				},
+				people: [{
+					name: 'Jack',
+					age: 30,
+					sex: 'Male'
+				}, {
+					name: 'Bill',
+					age: 26,
+					sex: 'Male'
+				}, {
+					name: 'Tracy',
+					age: 22,
+					sex: 'Female'
+				}, {
+					name: 'Chris',
+					age: 36,
+					sex: 'Male'
+				}]
+			},
+			methods:{
+				createPerson: function(){
+					this.people.push(this.newPerson);
+					// 添加完newPerson对象后，重置newPerson对象
+					this.newPerson = {name: '', age: 0, sex: 'Male'}
+				},
+				deletePerson: function(index){
+					// 删一个数组元素
+					this.people.splice(index,1);
+				},
+				modifyPerson: function(){
+					// 将上方的提示从创建对象变成修改对象
+					this.ModifyFlag = !this.ModifyFlag
+				},
+				savePerson: function(index){
+					// 首先删除原来的对象
+					this.people.splice(index,1);
+					// 再添加修改后的对象
+					this.people.push(this.newPerson);
+					this.newPerson = {name: '', age: 0, sex: 'Male'}
+					// 添加完对象后，将左上方的提示从修改对象变成创建对象
+					this.ModifyFlag = !this.ModifyFlag
+				}
+			}
+		})
+	</script>
+
+</html>
